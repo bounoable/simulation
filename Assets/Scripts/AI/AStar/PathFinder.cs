@@ -45,7 +45,7 @@ namespace Simulation.AI.AStar
                     break;
                 }
 
-                AnalyzeNeighourNodes(currentNode, targetNode, openSet, closedSet);
+                AnalyzeNeighbourNodes(currentNode, targetNode, openSet, closedSet);
             }
 
             yield return null;
@@ -60,7 +60,7 @@ namespace Simulation.AI.AStar
             UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
         }
 
-        void AnalyzeNeighourNodes(Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)
+        void AnalyzeNeighbourNodes(Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)
         {
             foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
                 if (!neighbour.Walkable || closedSet.Contains(neighbour))

@@ -4,8 +4,9 @@ namespace Simulation.AI
 {
     interface IApproacher
     {
-        bool IsApproaching { get; }
-        INPCTarget FindTarget();
+        INPCTarget FindTargetInSight();
+        INPCTarget FindTargetByHearing();
+
         void Approach(INPCTarget target);
         void StopApproach();
     }

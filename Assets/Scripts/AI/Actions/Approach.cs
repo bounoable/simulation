@@ -9,10 +9,10 @@ namespace Simulation.AI.Actions
         {
             var approacher = controller.GetComponent<IApproacher>();
 
-            if (approacher == null || approacher.IsApproaching)
+            if (approacher == null)
                 return;
 
-            INPCTarget target = approacher.FindTarget();
+            INPCTarget target = approacher.FindTargetInSight();
 
             if (target == null)
                 return;

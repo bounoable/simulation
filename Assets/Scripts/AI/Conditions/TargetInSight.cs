@@ -9,7 +9,7 @@ namespace Simulation.AI.Conditions
         {
             var approacher = controller.GetComponent<IApproacher>();
             
-            return approacher != null && approacher.FindTarget() != null;
+            return approacher != null && approacher.FindTargetInSight() != null;
         }
     }
 }

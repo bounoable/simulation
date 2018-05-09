@@ -6,22 +6,11 @@ namespace Simulation.Environment
 {
 	class Building: MonoBehaviour
 	{
+		public Door Door => door;
+		
 		[SerializeField]
-		Door[] doors = new Door[0];
+		Door door;
 
-		public bool IsOpen
-		{
-			get {
-				for (int i = 0; i < doors.Length; ++i) {
-					if (doors[i] == null)
-						continue;
-					
-					if (doors[i].IsOpen)
-						return true;
-				}
-
-				return false;
-			}
-		}
+		public bool IsOpen => door.IsOpen;
 	}
 }

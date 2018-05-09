@@ -59,8 +59,11 @@
      <Compile Include="Assets\Scripts\AI\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\PathFinder.cs" />
      <Compile Include="Assets\Scripts\AI\Character.cs" />
+     <Compile Include="Assets\Scripts\AI\Conditions\TargetHearable.cs" />
      <Compile Include="Assets\Scripts\AI\Conditions\TargetInSight.cs" />
+     <Compile Include="Assets\Scripts\AI\Conditions\TargetOutOfSight.cs" />
      <Compile Include="Assets\Scripts\AI\IApproacher.cs" />
+     <Compile Include="Assets\Scripts\AI\ICharacter.cs" />
      <Compile Include="Assets\Scripts\AI\INPCTarget.cs" />
      <Compile Include="Assets\Scripts\AI\IPathFinder.cs" />
      <Compile Include="Assets\Scripts\AI\IPatroling.cs" />
@@ -72,6 +75,7 @@
      <Compile Include="Assets\Scripts\AI\StateCondition.cs" />
      <Compile Include="Assets\Scripts\AI\StateController.cs" />
      <Compile Include="Assets\Scripts\AI\Transition.cs" />
+     <Compile Include="Assets\Scripts\Core\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\Core\GameManager.cs" />
      <Compile Include="Assets\Scripts\Environment\AutomaticDoor.cs" />
      <Compile Include="Assets\Scripts\Environment\Building.cs" />
@@ -81,6 +85,9 @@
      <Compile Include="Assets\Scripts\Environment\PressurePlate.cs" />
      <Compile Include="Assets\Scripts\Physics\PhysicsVolume.cs" />
      <Compile Include="Assets\Scripts\Player\Player.cs" />
+     <Compile Include="Assets\Scripts\Player\ThirdPersonCamera.cs" />
+     <Compile Include="Assets\Scripts\Procedural\BuildingFactory.cs" />
+     <Compile Include="Assets\Scripts\Procedural\NPCFactory.cs" />
      <Compile Include="Assets\Scripts\Support\Heap.cs" />
      <Compile Include="Assets\Scripts\Support\IHeapItem.cs" />
  <Reference Include="UnityEditor.StandardEvents">

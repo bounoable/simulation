@@ -9,8 +9,6 @@ namespace Simulation.AI
     [RequireComponent(typeof(ICharacter))]
     class Approacher: MonoBehaviour, IApproacher
     {
-        public bool IsApproaching { get; private set; } = false;
-
         [SerializeField]
         float LookRadius;
 
@@ -18,7 +16,9 @@ namespace Simulation.AI
 
         ICharacter character;
 
-        public INPCTarget FindTarget()
+        bool isApproaching = false;
+
+        public INPCTarget FindTargetInSight()
         {
             INPCTarget[] targets = FindTargets();
 
@@ -39,6 +39,13 @@ namespace Simulation.AI
             return colliders.Select(collider => collider.GetComponent<INPCTarget>()).ToArray();
         }
 
+        public INPCTarget FindTargetByHearing()
+        {
+            return null;
+
+            // INPCTarget[] targets = FindObjectsOfType(typeof(INPCTarget));
+        }
+
         INPCTarget[] SortTargetsByDistance(INPCTarget[] targets)
         {
             Array.Sort(targets, (a, b) => 
@@ -56,20 +63,14 @@ namespace Simulation.AI
 
         public void Approach(INPCTarget target)
         {
-            if (IsApproaching)
-                return;
-
-            IsApproaching = true;
+            isApproaching = true;
             
             character.MoveTo(target.Position);
         }
 
         public void StopApproach()
         {
-            if (!IsApproaching)
-                return;
-            
-            IsApproaching = false;
+            isApproaching = false;
 
             character.StopMoving();
         }

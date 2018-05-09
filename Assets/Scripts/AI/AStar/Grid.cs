@@ -21,9 +21,6 @@ namespace Simulation.AI.AStar
         LayerMask walkableMask = (1 << 9) | (1 << 10);
 
         [SerializeField]
-        GameObject player;
-
-        [SerializeField]
         bool drawGridGizmos = false;
 
         public Node NodeFromWorldPosition(Vector3 position)

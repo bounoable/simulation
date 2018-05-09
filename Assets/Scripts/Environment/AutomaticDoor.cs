@@ -1,4 +1,7 @@
 using UnityEngine;
+using System.Linq;
+using Simulation.AI;
+using Simulation.Core;
 
 namespace Simulation.Environment
 {
@@ -7,22 +10,22 @@ namespace Simulation.Environment
         [SerializeField]
         float sensorRange = 10f;
 
-        void OpenIfPlayerApproaches()
+        public void OpenIfApproached(GameManager game)
         {
-            if (IsClosed && PlayerApproaches())
+            if (IsClosed && CharacterApproaches(game))
                 Open();
         }
 
-        bool PlayerApproaches()
-        {
-            var player = FindObjectOfType<Player.Player>();
+        bool CharacterApproaches(GameManager game) => GetNearbyCharacters(game).Length > 0;
 
-            return player && Vector3.Distance(transform.position, player.Position) <= sensorRange;
-        }
-
-        void Update()
+        ICharacter[] GetNearbyCharacters(GameManager game)
         {
-            OpenIfPlayerApproaches();
+            ICharacter[] characters = game.Characters;
+
+            return characters.Where(character => Vector3.Distance(
+                transform.position,
+                character.Position
+            ) <= sensorRange).ToArray();
         }
     }
 }

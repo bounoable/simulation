@@ -12,8 +12,8 @@ namespace Simulation.AI
 
         public void UpdateState(StateController controller)
         {
-            RunActions(controller);
             CheckTransitions(controller);
+            RunActions(controller);
         }
 
         void RunActions(StateController controller)

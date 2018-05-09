@@ -4,6 +4,7 @@ using System.Collections;
 
 namespace Simulation.AI
 {
+    [RequireComponent(typeof(ICharacter))]
     class Patroler: MonoBehaviour, IPatroling
     {
         Vector3 Position
@@ -12,15 +13,7 @@ namespace Simulation.AI
             set { transform.position = value;}
         }
 
-        [SerializeField]
-        GameManager game;
-
-        PathRequestManager pathRequestManager;
-        Vector3[] waypoints = new Vector3[0];
         bool patroling = false;
-
-        [SerializeField]
-        float patrolMoveSpeed;
 
         [SerializeField]
         Transform patrolStart;
@@ -28,13 +21,17 @@ namespace Simulation.AI
         [SerializeField]
         Transform patrolEnd;
 
+        ICharacter character;
+
         public void Patrol()
         {
             if (patroling || !(patrolStart && patrolEnd))
                 return;
             
             patroling = true;
-            pathRequestManager.RequestPath(patrolStart.position, patrolEnd.position, OnPathFound);
+            Position = patrolStart.position;
+            
+            character.MoveTo(patrolEnd.position);
         }
 
         public void StopPatrol()
@@ -42,50 +39,14 @@ namespace Simulation.AI
             if (!patroling)
                 return;
             
-            StopCoroutine("FollowPath");
-        }
-
-        void OnPathFound(Vector3[] waypoints, bool success)
-        {
-            this.waypoints = waypoints;
-
-            StartCoroutine(FollowPath());
-        }
-
-        IEnumerator FollowPath()
-        {
-            if (waypoints.Length == 0)
-                yield break;
+            patroling = false;
             
-            Position = waypoints[0];
-            Vector3 endPos = waypoints[waypoints.Length - 1];
-            int targetIndex = 0;
-
-            while (Position != endPos) {
-                targetIndex++;
-
-                if (targetIndex >= waypoints.Length)
-                    break;
-                
-                Vector3 targetPos = waypoints[targetIndex];
-
-                while (Position != targetPos) {
-                    Position = Vector3.MoveTowards(Position, targetPos, patrolMoveSpeed * Time.fixedDeltaTime);
-                    transform.LookAt(targetPos);
-
-                    yield return new WaitForFixedUpdate();
-                }
-            }
+            character.StopMoving();
         }
 
         void Awake()
         {
-            if (!game) {
-                Destroy(gameObject);
-                return;
-            }
-            
-            pathRequestManager = game.PathRequestManager;
+            character = GetComponent<ICharacter>();
         }
     }
 }

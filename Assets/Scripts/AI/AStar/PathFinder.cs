@@ -22,9 +22,6 @@ namespace Simulation.AI.AStar
 
         public IEnumerator CalculatePath(Vector3 startPos, Vector3 targetPos, PathRequestManager requestManager)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             Vector3[] waypoints = new Vector3[0];
             bool pathFound = false;
 
@@ -55,9 +52,6 @@ namespace Simulation.AI.AStar
 
             if (requestManager != null)
                 requestManager.OnProcessingFinished(waypoints, pathFound);
-            
-            sw.Stop();
-            UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
         }
 
         void AnalyzeNeighbourNodes(Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)

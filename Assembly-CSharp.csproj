@@ -52,10 +52,16 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AI\Action.cs" />
+     <Compile Include="Assets\Scripts\AI\Actions\Approach.cs" />
      <Compile Include="Assets\Scripts\AI\Actions\Patrol.cs" />
+     <Compile Include="Assets\Scripts\AI\Approacher.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\Grid.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\PathFinder.cs" />
+     <Compile Include="Assets\Scripts\AI\Character.cs" />
+     <Compile Include="Assets\Scripts\AI\Conditions\TargetInSight.cs" />
+     <Compile Include="Assets\Scripts\AI\IApproacher.cs" />
+     <Compile Include="Assets\Scripts\AI\INPCTarget.cs" />
      <Compile Include="Assets\Scripts\AI\IPathFinder.cs" />
      <Compile Include="Assets\Scripts\AI\IPatroling.cs" />
      <Compile Include="Assets\Scripts\AI\NPC.cs" />

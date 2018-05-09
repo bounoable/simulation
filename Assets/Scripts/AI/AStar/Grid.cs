@@ -18,7 +18,7 @@ namespace Simulation.AI.AStar
         float NodeDiameter => NodeRadius * 2;
 
         Node[][] nodes;
-        LayerMask walkableMask = 1 << 9;
+        LayerMask walkableMask = (1 << 9) | (1 << 10);
 
         [SerializeField]
         GameObject player;

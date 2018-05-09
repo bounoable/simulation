@@ -7,22 +7,22 @@ namespace Simulation.AI.Actions
     {
         override public void Run(StateController controller)
         {
-            var patroling = controller.GetComponent<IPatroling>();
+            var patroler = controller.GetComponent<IPatroling>();
 
-            if (patroling == null)
+            if (patroler == null)
                 return;
             
-            patroling.Patrol();
+            patroler.Patrol();
         }
 
         override public void Stop(StateController controller)
         {
-            var patroling = controller.GetComponent<IPatroling>();
+            var patroler = controller.GetComponent<IPatroling>();
 
-            if (patroling == null)
+            if (patroler == null)
                 return;
             
-            patroling.StopPatrol();
+            patroler.StopPatrol();
         }
     }
 }

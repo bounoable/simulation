@@ -18,6 +18,8 @@ namespace Simulation.AI
 
         bool isApproaching = false;
 
+        IEnumerator approach;
+
         public INPCTarget FindTargetInSight()
         {
             INPCTarget[] targets = FindTargets();
@@ -32,9 +34,9 @@ namespace Simulation.AI
 
         public INPCTarget[] FindTargets()
         {
-            Collider[] colliders =  UnityEngine.Physics.OverlapSphere(transform.position, LookRadius, targetMask);
+            Collider[] colliders = UnityEngine.Physics.OverlapSphere(transform.position, LookRadius);
 
-            colliders = Array.FindAll(colliders, collider => collider.GetComponent<INPCTarget>() != null);
+            colliders = Array.FindAll(colliders, collider => collider.GetComponent<Player.Player>() != null);
 
             return colliders.Select(collider => collider.GetComponent<INPCTarget>()).ToArray();
         }
@@ -63,16 +65,31 @@ namespace Simulation.AI
 
         public void Approach(INPCTarget target)
         {
-            isApproaching = true;
+            if (isApproaching)
+                return;
             
-            character.MoveTo(target.Position);
+            isApproaching = true;
+
+            StartCoroutine(approach = StartApproach(target));
+        }
+
+        IEnumerator StartApproach(INPCTarget target)
+        {
+            while (true) {
+                if (Vector3.Distance(transform.position, target.Position) < 0.5f)
+                    yield break;
+
+                transform.LookAt(target.Position);
+                transform.position += transform.forward * character.MoveSpeed * Time.fixedDeltaTime;
+
+                yield return new WaitForFixedUpdate();
+            }
         }
 
         public void StopApproach()
-        {
+        {   
+            StopCoroutine(approach);
             isApproaching = false;
-
-            character.StopMoving();
         }
 
         void Awake()

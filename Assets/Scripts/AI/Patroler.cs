@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Simulation.Core;
 using System.Collections;
@@ -14,7 +15,6 @@ namespace Simulation.AI
             set { transform.position = value; }
         }
 
-        [SerializeField]
         Transform[] patrolWaypoints;
         Transform currentPatrolPoint;
 
@@ -34,19 +34,24 @@ namespace Simulation.AI
             currentPatrolPoint = patrolQueue.Dequeue();
             patrolQueue.Enqueue(currentPatrolPoint);
 
-            character.StopMoving();
-            character.MoveTo(currentPatrolPoint.position, () => patroling = false);
+            character.MoveTo(currentPatrolPoint.position, () => patroling = false, () => patroling = false);
         }
 
         public void StopPatrol()
-        {   
-            patroling = false;
+        {
+            // patroling = false;
             character.StopMoving();
         }
 
-        void Awake()
+        public void SetPatrolWaypoints(PatrolWaypoint[] waypoints)
         {
-            character = GetComponent<ICharacter>();
+            patrolWaypoints = waypoints.Select(waypoint => waypoint.transform).ToArray();
+            InitWaypoints();
+        }
+
+        void InitWaypoints()
+        {
+            patrolQueue.Clear();
             
             for (int i = 0; i < patrolWaypoints.Length; ++i) {
                 if (patrolWaypoints[i] == null)
@@ -54,6 +59,13 @@ namespace Simulation.AI
                 
                 patrolQueue.Enqueue(patrolWaypoints[i]);
             }
+        }
+
+        void Awake()
+        {
+            character = GetComponent<ICharacter>();
+        
+            InitWaypoints();
         }
     }
 }

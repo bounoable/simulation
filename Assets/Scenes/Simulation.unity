@@ -113,87 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &465551124
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 465551125}
-  m_Layer: 0
-  m_Name: PlayerSpawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &465551125
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 465551124}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -45, y: -5, z: -45}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1001590345}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1001590341 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1620125036962872, guid: cca7eb8d4d79f436297301c7ae39ce48,
-    type: 2}
-  m_PrefabInternal: {fileID: 2065609754}
---- !u!114 &1001590342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1001590341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 790d8370a4e4348d5a82fd6a6ec702c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingPrefabs:
-  - {fileID: 114919730892744906, guid: 40931a4cccdd44ab197a1f061308f831, type: 2}
-  npcPrefab: {fileID: 114306068880030016, guid: aa8dfe726b21849b9be97b3a2838c77e,
-    type: 2}
-  playerSpawn: {fileID: 465551125}
-  playerPrefab: {fileID: 114798627286967564, guid: 2c6cb797a1c3741f6b96549e6017974e,
-    type: 2}
---- !u!114 &1001590343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1001590341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d90cea8717da343ea852d95fc1b82b0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1001590344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1001590341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c91abc622610427cbf05d467b2ac5b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  worldSize: {x: 100, y: 100}
-  nodeRadius: 1
-  drawGridGizmos: 0
---- !u!4 &1001590345 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4012921183628132, guid: cca7eb8d4d79f436297301c7ae39ce48,
-    type: 2}
-  m_PrefabInternal: {fileID: 2065609754}
 --- !u!1 &1012385154
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,7 +189,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1012385154}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 13.1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -351,7 +270,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &2065609754
 Prefab:
@@ -390,11 +309,17 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4012921183628132, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1235367005993104, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}
-      propertyPath: m_Layer
-      value: 9
+    - target: {fileID: 114705697497366908, guid: cca7eb8d4d79f436297301c7ae39ce48,
+        type: 2}
+      propertyPath: drawGridGizmos
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114705697497366908, guid: cca7eb8d4d79f436297301c7ae39ce48,
+        type: 2}
+      propertyPath: nodeRadius
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}

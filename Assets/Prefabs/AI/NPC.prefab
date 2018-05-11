@@ -21,8 +21,7 @@ GameObject:
   - component: {fileID: 4757540781475710}
   - component: {fileID: 33470438434250150}
   - component: {fileID: 23948344185349760}
-  - component: {fileID: 136898552954044076}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,8 +38,7 @@ GameObject:
   - component: {fileID: 4429845419806754}
   - component: {fileID: 33801127374713278}
   - component: {fileID: 23833155351591140}
-  - component: {fileID: 135973458245554608}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EyeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,8 +55,7 @@ GameObject:
   - component: {fileID: 4982577715159516}
   - component: {fileID: 33622375342368792}
   - component: {fileID: 23226786877286480}
-  - component: {fileID: 135706786835073428}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EyeRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +75,8 @@ GameObject:
   - component: {fileID: 114837518987536840}
   - component: {fileID: 114988023560305948}
   - component: {fileID: 114306068880030016}
-  m_Layer: 0
+  - component: {fileID: 136351721580014514}
+  m_Layer: 10
   m_Name: NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +116,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1357978064298088}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4757540781475710}
@@ -293,7 +291,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  initialState: {fileID: 11400000, guid: a8e6f508709144e8f840f839b4bbcd49, type: 2}
 --- !u!114 &114748053323629538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -305,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8f47ad8b0264f45b56cb1b072303bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: {fileID: 0}
+  currentState: {fileID: 11400000, guid: a8e6f508709144e8f840f839b4bbcd49, type: 2}
 --- !u!114 &114837518987536840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,7 +314,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cfb6dbc3b1064afb808b178ef9880e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolWaypoints: []
 --- !u!114 &114988023560305948
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -329,41 +325,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba514c01d46a244579e0c4747ad26b0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LookRadius: 10
---- !u!135 &135706786835073428
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1307246123752298}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &135973458245554608
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1237310702734132}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136898552954044076
+  LookRadius: 5
+--- !u!136 &136351721580014514
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1037525461618986}
+  m_GameObject: {fileID: 1357978064298088}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.5084547
+  m_Height: 2.011166
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.0077347755, y: 0.9825165, z: -0.008677006}

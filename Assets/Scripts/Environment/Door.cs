@@ -19,36 +19,27 @@ namespace Simulation.Environment
 		[SerializeField]
 		float openSpeed;
 
-		public void Open()
+		public void Open() => Open(() => {});
+		public void Open(System.Action callback)
 		{
+			Debug.Log(openedPosition);
 			if (!IsOpen)
-				StartCoroutine(MoveTo(openedPosition, () => IsOpen = true));
+				StartCoroutine(MoveTo(openedPosition, () => {
+					IsOpen = true;
+					if (callback != null)
+						callback();
+				}));
 		}
 
-		public void Close()
+		public void Close() => Close(() => {});
+		public void Close(System.Action callback)
 		{
 			if (!IsClosed)
-				StartCoroutine(MoveTo(closedPosition, () => IsClosed = true));
-		}
-
-		IEnumerator MoveTo(Vector3 position, System.Action callback)
-		{
-			while (true) {
-				if (openSpeed == 0)
-					break;
-
-				transform.position = Vector3.MoveTowards(transform.position, position, openSpeed * Time.fixedDeltaTime);
-
-				if (transform.position == position)
-					break;
-
-				yield return new WaitForFixedUpdate();
-			}
-
-			if (callback != null)
-				callback();
-
-			yield return null;
+				StartCoroutine(MoveTo(closedPosition, () => {
+					IsClosed = true;
+					if (callback != null)
+						callback();
+				}));
 		}
 
 		public void Toggle()
@@ -60,10 +51,30 @@ namespace Simulation.Environment
 			}
 		}
 
-		void Awake()
+		IEnumerator MoveTo(Vector3 position, System.Action callback)
+		{
+			StopCoroutine("MoveTo");
+			
+			while (true) {
+				if (openSpeed == 0)
+					yield break;
+
+				transform.position = Vector3.MoveTowards(transform.position, position, openSpeed * Time.fixedDeltaTime);
+
+				if (transform.position == position)
+					break;
+
+				yield return new WaitForFixedUpdate();
+			}
+
+			if (callback != null)
+				callback();
+		}
+
+		virtual protected void Awake()
 		{
 			closedPosition = transform.position;
-			openedPosition = transform.position + Vector3.left * transform.localScale.x;
+			openedPosition = transform.position - transform.right * transform.lossyScale.x;
 		}
 	}
 }

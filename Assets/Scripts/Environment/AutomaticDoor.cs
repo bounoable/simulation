@@ -10,10 +10,19 @@ namespace Simulation.Environment
         [SerializeField]
         float sensorRange = 10f;
 
-        public void OpenIfApproached(GameManager game)
+        public void AutoOpenClose(GameManager game, ref bool toggled)
         {
-            if (IsClosed && CharacterApproaches(game))
+            bool approached = CharacterApproaches(game);
+
+            if (IsClosed && approached) {
                 Open();
+
+                toggled = true;
+            } else if (IsOpen && !approached) {
+                Close();
+
+                toggled = true;
+            }
         }
 
         bool CharacterApproaches(GameManager game) => GetNearbyCharacters(game).Length > 0;

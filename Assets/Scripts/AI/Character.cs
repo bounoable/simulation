@@ -7,22 +7,20 @@ namespace Simulation.AI
     abstract class Character: MonoBehaviour, ICharacter
     {
         public Vector3 Position => transform.position;
-
         public PathRequestManager PathRequestManager { get; set; }
+        public float MoveSpeed => moveSpeed;
 
         [SerializeField]
         protected float moveSpeed;
 
-        Vector3[] waypoints;
+        Vector3[] waypoints = new Vector3[0];
 
         System.Action onTargetReached;
+        System.Action onPathFail;
 
-        public void MoveTo(Vector3 target)
-        {
-            MoveTo(target, () => {});
-        }
-
-        public void MoveTo(Vector3 target, System.Action onTargetReached)
+        public void MoveTo(Vector3 target) => MoveTo(target, () => {}, () => {});
+        public void MoveTo(Vector3 target, System.Action onTargetReached) => MoveTo(target, onTargetReached, () => {});
+        public void MoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail)
         {
             StopMoving();
 
@@ -30,11 +28,19 @@ namespace Simulation.AI
                 return;
 
             this.onTargetReached = onTargetReached;
+            this.onPathFail = onPathFail;
             PathRequestManager.RequestPath(transform.position, target, OnPathFound);
         }
 
         void OnPathFound(Vector3[] waypoints, bool success)
         {
+            if (!success) {
+                if (onPathFail != null)
+                    onPathFail();
+                
+                return;
+            }
+
             this.waypoints = waypoints;
 
             StartCoroutine(FollowPath());
@@ -42,8 +48,6 @@ namespace Simulation.AI
 
         IEnumerator FollowPath()
         {
-            bool endTargetReached = false;
-
             if (waypoints.Length == 0)
                 yield break;
             
@@ -51,67 +55,34 @@ namespace Simulation.AI
             Vector3 endPos = waypoints[waypoints.Length - 1];
             int targetIndex = 0;
 
-            while (!endTargetReached) {
-                targetIndex++;
-
-                if (targetIndex >= waypoints.Length) {
-                    endTargetReached = true;
+            while (true) {
+                if (targetIndex >= waypoints.Length)
                     break;
-                }
+                
+                if (Vector3.Distance(transform.position, endPos) < 0.2f)
+                    break;
                 
                 Vector3 targetPos = waypoints[targetIndex];
-                
-                MoveTowards(targetPos);
 
-                bool targetReached = false;
+                transform.LookAt(targetPos);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.fixedDeltaTime);
 
-                while (!targetReached) {
-                    if (Vector3.Distance(transform.position, targetPos) < 0.5f) {
-                        targetReached = true;
-                        transform.position = targetPos;
-                    }
-                    
-                    yield return new WaitForFixedUpdate();
-                }
-            }
-
-            if (onTargetReached != null)
-                onTargetReached();
-        }
-
-        public void StopMoving()
-        {
-            StopCoroutine("StartMoveTowards");
-            StopCoroutine("FollowPath");
-            this.waypoints = new Vector3[0];
-        }
-
-        public void MoveTowards(Vector3 target)
-        {
-            StopCoroutine("StartMoveTowards");
-            StartCoroutine(StartMoveTowards(target));
-        }
-
-        IEnumerator StartMoveTowards(Vector3 target)
-        {
-            bool targetReached = false;
-            Vector3 lastPos = transform.position;
-
-            while (!targetReached) {
-                transform.LookAt(target);
-                transform.Translate(Vector3.forward * moveSpeed * Time.fixedDeltaTime);
-
-                if (Vector3.Distance(transform.position, target) < 0.5f || Vector3.Distance(transform.position, lastPos) < 0.1f)
-                    targetReached = true;
-                
-                lastPos = transform.position;
+                if (transform.position == targetPos)
+                    targetIndex++;
 
                 yield return new WaitForFixedUpdate();
             }
 
-            transform.position = target;
+            if (onTargetReached != null)
+                onTargetReached();
+            
+            waypoints = new Vector3[0];
+        }
 
-            yield return new WaitForFixedUpdate();
+        public void StopMoving()
+        {
+            StopCoroutine("FollowPath");
+            waypoints = new Vector3[0];
         }
     }
 }

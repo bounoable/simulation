@@ -71,25 +71,32 @@
      <Compile Include="Assets\Scripts\AI\PathRequest.cs" />
      <Compile Include="Assets\Scripts\AI\PathRequestManager.cs" />
      <Compile Include="Assets\Scripts\AI\Patroler.cs" />
+     <Compile Include="Assets\Scripts\AI\PatrolWaypoint.cs" />
      <Compile Include="Assets\Scripts\AI\State.cs" />
      <Compile Include="Assets\Scripts\AI\StateCondition.cs" />
      <Compile Include="Assets\Scripts\AI\StateController.cs" />
      <Compile Include="Assets\Scripts\AI\Transition.cs" />
      <Compile Include="Assets\Scripts\Core\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\Core\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Core\Prefabs.cs" />
      <Compile Include="Assets\Scripts\Environment\AutomaticDoor.cs" />
      <Compile Include="Assets\Scripts\Environment\Building.cs" />
      <Compile Include="Assets\Scripts\Environment\Door.cs" />
      <Compile Include="Assets\Scripts\Environment\DoorHandle.cs" />
      <Compile Include="Assets\Scripts\Environment\ManualDoor.cs" />
      <Compile Include="Assets\Scripts\Environment\PressurePlate.cs" />
+     <Compile Include="Assets\Scripts\Environment\PressurePlateBall.cs" />
      <Compile Include="Assets\Scripts\Physics\PhysicsVolume.cs" />
      <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Player\ThirdPersonCamera.cs" />
      <Compile Include="Assets\Scripts\Procedural\BuildingFactory.cs" />
      <Compile Include="Assets\Scripts\Procedural\NPCFactory.cs" />
+     <Compile Include="Assets\Scripts\Procedural\PatrolWaypointFactory.cs" />
      <Compile Include="Assets\Scripts\Support\Heap.cs" />
+     <Compile Include="Assets\Scripts\Support\ICollisionObservable.cs" />
+     <Compile Include="Assets\Scripts\Support\ICollisionObserver.cs" />
      <Compile Include="Assets\Scripts\Support\IHeapItem.cs" />
+     <None Include="Assets\Sounds\Read Me.txt" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>/Users/Bono/Unity Projects/Simulation/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

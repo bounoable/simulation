@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152c5a9b826644260bc98760ecd4f329, type: 3}
+  m_Name: Prefabs
+  m_EditorClassIdentifier: 
+  player: {fileID: 114798627286967564, guid: 2c6cb797a1c3741f6b96549e6017974e, type: 2}
+  npc: {fileID: 114306068880030016, guid: aa8dfe726b21849b9be97b3a2838c77e, type: 2}
+  buildings:
+  - {fileID: 114919730892744906, guid: 40931a4cccdd44ab197a1f061308f831, type: 2}
+  - {fileID: 114029012022157580, guid: fc5ae10d1530c468eb38613c049f060f, type: 2}
+  patrolWaypoint: {fileID: 114067683371127950, guid: e66094dd773bd4a4eb40fdb105f9b6dd,
+    type: 2}
+  pressurePlate: {fileID: 114983917584474078, guid: 823c56b535bd340fe820af235cb89b65,
+    type: 2}

@@ -17,7 +17,7 @@ namespace Simulation.Player
 
             Transform head = Player.Head;
 
-            transform.position = head.position - Player.Transform.forward * distance;
+            transform.position = head.position - Player.Transform.forward * distance + Player.Transform.up * 0.5f;
             transform.LookAt(head.position);
         }
     }

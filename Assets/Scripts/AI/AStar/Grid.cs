@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -5,12 +6,16 @@ namespace Simulation.AI.AStar
 {
     class Grid: MonoBehaviour
     {
+        static System.Random rand = new System.Random();
+
         public int Size => gridSize.x * gridSize.y;
+        public Vector2 WorldSize => worldSize;
+        public Vector3 WorldBottomLeft => transform.position - Vector3.right * worldSize.x / 2 - Vector3.forward * worldSize.y / 2;
+
         Vector2Int gridSize;
 
         [SerializeField]
         Vector2 worldSize;
-        Vector3 WorldBottomLeft => transform.position - Vector3.right * worldSize.x / 2 - Vector3.forward * worldSize.y / 2;
 
         [SerializeField]
         float nodeRadius;
@@ -18,7 +23,7 @@ namespace Simulation.AI.AStar
         float NodeDiameter => NodeRadius * 2;
 
         Node[][] nodes;
-        LayerMask walkableMask = (1 << 9) | (1 << 10);
+        LayerMask walkableMask = (1 << 9) | (1 << 11);
 
         [SerializeField]
         bool drawGridGizmos = false;
@@ -40,6 +45,28 @@ namespace Simulation.AI.AStar
             return nodes[x][y];
         }
 
+        public Node RandomNode()
+        {
+            if (nodes == null)
+                return null;
+            
+            return nodes[rand.Next(0, gridSize.x)][rand.Next(0, gridSize.y)];
+        }
+
+        public Node RandomInnerNode(float wallDistance)
+        {
+            if (nodes == null)
+                return null;
+            
+            float areaPercentage = 1 - Mathf.Clamp01(wallDistance);
+            
+            Vector2Int innerGridSize = new Vector2Int((int)(gridSize.x * areaPercentage), ((int)(gridSize.y * areaPercentage)));
+            int halfWidth = innerGridSize.x / 2;
+            int halfHeight = innerGridSize.y / 2;
+
+            return nodes[rand.Next(gridSize.x / 2 - halfWidth, innerGridSize.x)][rand.Next(gridSize.y / 2 - halfHeight, innerGridSize.y)];
+        }
+
         public List<Node> GetNeighbours(Node node)
         {
             var neighbours = new List<Node>();
@@ -59,6 +86,22 @@ namespace Simulation.AI.AStar
             }
 
             return neighbours;
+        }
+
+        public void RecreateGrid()
+        {
+            for (int x = 0; x < gridSize.x; ++x) {
+                for (int y = 0; y < gridSize.y; ++y) {
+                    Node node = nodes[x][y];
+                    var gridPos = new Vector2Int(x, y);
+
+                    Vector3 worldPoint = WorldBottomLeft
+                        + Vector3.right * (gridPos.x * NodeDiameter + NodeRadius)
+                        + Vector3.forward * (gridPos.y * NodeDiameter + NodeRadius);
+
+                    node.Walkable = !UnityEngine.Physics.CheckSphere(worldPoint, NodeRadius, ~walkableMask);
+                }
+            }
         }
 
         void CreateGrid()

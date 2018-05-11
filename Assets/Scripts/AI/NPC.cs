@@ -11,19 +11,5 @@ namespace Simulation.AI
     ]
     class NPC: Character
     {
-        StateController stateController;
-
-        [SerializeField]
-        State initialState;
-
-        void Awake()
-        {
-            stateController = GetComponent<StateController>();
-        }
-
-        void Start()
-        {
-            stateController.CurrentState = initialState;
-        }
     }
 }

@@ -1,50 +1,32 @@
 using UnityEngine;
+using Simulation.Support;
 
 namespace Simulation.Environment
 {
-    [RequireComponent(typeof(DoorHandle))]
-    class ManualDoor: Door
+    class ManualDoor: Door, ICollisionObserver
     {
-        DoorHandle handle;
+        public bool WasRecentlyOpened { get; set; } = false;
 
-        bool HandleTriggered()
+        [SerializeField]
+        DoorHandle doorHandle;
+
+        public void NotifyCollision(Collider collider, Collision collision)
         {
-            var player = FindObjectOfType<Player.Player>();
+            var handle = collider.GetComponent<DoorHandle>();
 
-            if (!player)
-                return false;
-            
-            if (Vector3.Distance(transform.position, player.Position) > handle.Range)
-                return false;
-            
-            return HandleClicked();
-        }
-
-        bool HandleClicked()
-        {
-            if (Input.GetMouseButtonDown(0)) {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (UnityEngine.Physics.Raycast(ray, out hit, handle.Range)) {
-                    var handle = hit.collider.GetComponent<DoorHandle>();
-
-                    return handle && handle == this.handle;
-                }
+            if (handle == doorHandle) {
+                doorHandle.Trigger(() => Open(() => WasRecentlyOpened = true));
             }
-
-            return false;
         }
 
-        void Awake()
+        override protected void Awake()
         {
-            handle = GetComponent<DoorHandle>();
-        }
+            base.Awake();
 
-        void OnMouseDown()
-        {
-            if (HandleTriggered())
-                Toggle();
+            if (!doorHandle)
+                Destroy(gameObject);
+            
+            doorHandle.ObserveCollisions(this);
         }
     }
 }

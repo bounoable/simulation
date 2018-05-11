@@ -7,7 +7,7 @@ namespace Simulation.AI.AStar
     {
         public Vector3 Position { get; private set; }
         public Vector2Int GridPosition { get; private set; }
-        public bool Walkable { get; private set; }
+        public bool Walkable { get; set; }
         public float GCost { get; set; }
         public float HCost { get; set; }
         public float FCost => GCost + HCost;

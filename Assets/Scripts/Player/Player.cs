@@ -7,8 +7,6 @@ namespace Simulation.Player
     [RequireComponent(typeof(Rigidbody))]
     class Player: Character, INPCTarget
     {
-        const int groundMask = 1 << 9;
-
         public Transform Transform => transform;
         public Transform Head => head;
 
@@ -16,71 +14,63 @@ namespace Simulation.Player
         Transform head;
 
         [SerializeField]
-        float rotationSpeed;
+        float rotationSpeed = 2f;
+
+        [SerializeField]
+        float gravity = 10.0f;
+
+        [SerializeField]
+        float maxVelocityChange = 10.0f;
+
+        [SerializeField]
+        float jumpHeight = 1.0f;
+
+        bool grounded = false;
 
         Rigidbody rb;
-
-        bool isJumping = false;
-
+    
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-        }
 
+            rb.freezeRotation = true;
+            rb.useGravity = false;
+        }
+    
         void FixedUpdate()
         {
-            if (Input.GetKey(KeyCode.W)) {
-                Move(Vector3.forward);
-            }
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Horizontal") * rotationSpeed, 0);
 
-            if (Input.GetKey(KeyCode.S)) {
-                Move(Vector3.back);
-            }
-
-            if (Input.GetKey(KeyCode.A)) {
-                Rotate(Quaternion.Euler(Vector3.down * rotationSpeed));
-            }
-
-            if (Input.GetKey(KeyCode.D)) {
-                Rotate(Quaternion.Euler(Vector3.up * rotationSpeed));
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space)) {
-                Jump();
-            }
-
-            rb.AddRelativeForce(Vector3.down * 1000);
-        }
-
-        void Move(Vector3 direction)
-        {
-            transform.Translate(direction * moveSpeed * Time.fixedDeltaTime);
-        }
-
-        void Rotate(Quaternion rotation)
-        {
-            transform.rotation *= rotation;
-        }
-
-        void Jump()
-        {
-            if (isJumping)
-                return;
-
-            isJumping = true;
-            rb.AddRelativeForce(Vector3.up * 40000);
-        }
-
-        void OnCollisionEnter(Collision collision)
-        {
-            if (isJumping) {
-                Collider collider = collision.collider;
-
-
-                if (((1 << collider.gameObject.layer) & groundMask) == groundMask) {
-                    isJumping = false;
+            if (grounded) {
+                Vector3 targetVelocity = new Vector3(0, 0, Input.GetAxis("Vertical"));
+                targetVelocity = transform.TransformDirection(targetVelocity);
+                targetVelocity *= moveSpeed;
+    
+                Vector3 velocity = rb.velocity;
+                Vector3 velocityChange = (targetVelocity - velocity);
+                velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+                velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+                velocityChange.y = 0;
+                rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    
+                if (Input.GetButton("Jump")) {
+                    rb.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
                 }
             }
+    
+            rb.AddForce(new Vector3 (0, -gravity * rb.mass, 0));
+    
+            grounded = false;
+        }
+    
+        void OnCollisionStay()
+        {
+            grounded = true;
+        }
+    
+        float CalculateJumpVerticalSpeed()
+        {
+            return Mathf.Sqrt(2 * jumpHeight * gravity);
         }
     }
 }

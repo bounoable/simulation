@@ -9,11 +9,13 @@ namespace Simulation.AI
         Queue<PathRequest> requestQueue = new Queue<PathRequest>();
         PathRequest currentRequest;
         IPathFinder pathFinder;
+        AStar.Grid grid;
         bool isProcessing;
 
-        public PathRequestManager(IPathFinder pathFinder)
+        public PathRequestManager(IPathFinder pathFinder, AStar.Grid grid)
         {
             this.pathFinder = pathFinder;
+            this.grid = grid;
         }
 
         public void RequestPath(Vector3 start, Vector3 target, Action<Vector3[], bool> callback)
@@ -39,7 +41,7 @@ namespace Simulation.AI
             if (!isProcessing && requestQueue.Count > 0) {
                 currentRequest = requestQueue.Dequeue();
                 isProcessing = true;
-                pathFinder.FindPath(currentRequest.Start, currentRequest.Target, this);
+                pathFinder.FindPath(grid, currentRequest.Start, currentRequest.Target, this);
             }
         }
     }

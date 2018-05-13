@@ -20,3 +20,4 @@ MonoBehaviour:
     type: 2}
   pressurePlate: {fileID: 114983917584474078, guid: 823c56b535bd340fe820af235cb89b65,
     type: 2}
+  mazeWall: {fileID: 114991461542944310, guid: fbccb5396b85443f7ac0261bb52b15bb, type: 2}

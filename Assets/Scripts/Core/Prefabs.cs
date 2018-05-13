@@ -1,6 +1,7 @@
 using UnityEngine;
 using Simulation.AI;
 using Simulation.Player;
+using Simulation.Procedural;
 using Simulation.Environment;
 
 namespace Simulation.Core
@@ -15,6 +16,7 @@ namespace Simulation.Core
         public Building[] Buildings => buildings;
         public PatrolWaypoint PatrolWaypoint => patrolWaypoint;
         public PressurePlate PressurePlate => pressurePlate;
+        public MazeWall MazeWall => mazeWall;
 
         [SerializeField]
         Player.Player player;
@@ -30,5 +32,8 @@ namespace Simulation.Core
 
         [SerializeField]
         PressurePlate pressurePlate;
+
+        [SerializeField]
+        MazeWall mazeWall;
     }
 }

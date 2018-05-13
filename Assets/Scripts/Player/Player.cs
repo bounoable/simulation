@@ -65,7 +65,8 @@ namespace Simulation.Player
     
         void OnCollisionStay()
         {
-            grounded = true;
+            if (UnityEngine.Physics.Raycast(transform.position, -transform.up, 1f, 1 << 9))
+                grounded = true;
         }
     
         float CalculateJumpVerticalSpeed()

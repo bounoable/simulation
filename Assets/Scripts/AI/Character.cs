@@ -23,9 +23,15 @@ namespace Simulation.AI
         public void MoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail)
         {
             StopMoving();
+            StartCoroutine(RealMoveTo(target, onTargetReached, onPathFail));
+        }
+
+        IEnumerator RealMoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail)
+        {
+            // yield return new WaitForSeconds(0.2f);
 
             if (PathRequestManager == null)
-                return;
+                yield break;
 
             this.onTargetReached = onTargetReached;
             this.onPathFail = onPathFail;
@@ -51,7 +57,6 @@ namespace Simulation.AI
             if (waypoints.Length == 0)
                 yield break;
             
-            transform.position = waypoints[0];
             Vector3 endPos = waypoints[waypoints.Length - 1];
             int targetIndex = 0;
 
@@ -64,8 +69,8 @@ namespace Simulation.AI
                 
                 Vector3 targetPos = waypoints[targetIndex];
 
-                transform.LookAt(targetPos);
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.fixedDeltaTime);
+                transform.rotation = Quaternion.LookRotation(targetPos - transform.position, Vector3.up);
 
                 if (transform.position == targetPos)
                     targetIndex++;

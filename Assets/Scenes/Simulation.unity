@@ -207,6 +207,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 3
+--- !u!1 &1233556211 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1235367005993104, guid: cca7eb8d4d79f436297301c7ae39ce48,
+    type: 2}
+  m_PrefabInternal: {fileID: 2065609754}
+--- !u!114 &1233556212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1233556211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9a49d248d7b4d0a817d623d046811f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1331107057
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,6 +336,14 @@ Prefab:
         type: 2}
       propertyPath: nodeRadius
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334627176118392, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334627176118392, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cca7eb8d4d79f436297301c7ae39ce48, type: 2}

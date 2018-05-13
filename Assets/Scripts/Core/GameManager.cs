@@ -16,6 +16,12 @@ namespace Simulation.Core
     ]
     class GameManager: MonoBehaviour, ICollisionObserver
     {
+        enum Stage
+        {
+            Start,
+            Maze,
+        }
+
         ThirdPersonCamera cam;
 
         public ICharacter[] Characters
@@ -23,7 +29,7 @@ namespace Simulation.Core
             get {
                 var characters = new ICharacter[npcs.Count + 1];
 
-                characters[0] = player;
+                characters[0] = Player;
 
                 for (int i = 0; i < npcs.Count; ++i) {
                     characters[i + 1] = npcs[i];
@@ -35,12 +41,16 @@ namespace Simulation.Core
 
         public AI.AStar.Grid Grid { get; private set; }
 
+        public Prefabs Prefabs => prefabs;
+
         PathFinder pathFinder;
 
         NPCFactory npcFactory;
         BuildingFactory buildingFactory;
         PatrolWaypointFactory waypointFactory;
         BuildingManager buildingManager;
+        Maze maze;
+        Stage stage = Stage.Start;
 
         PatrolWaypoint[] patrolWaypoints;
         List<NPC> npcs = new List<NPC>();
@@ -51,7 +61,7 @@ namespace Simulation.Core
         [SerializeField]
         Transform playerSpawn;
 
-        Player.Player player;
+        public Player.Player Player { get; private set; }
 
         public void NotifyCollision(Collider collider, Collision collision)
         {
@@ -60,9 +70,25 @@ namespace Simulation.Core
             }
         }
 
+        public void CreateMaze()
+        {
+            if (stage == Stage.Maze)
+                return;
+            
+            stage = Stage.Maze;
+
+            for (int i = 0; i < npcs.Count; ++i) {
+                Destroy(npcs[i].gameObject);
+            }
+
+            npcs.Clear();
+            buildingManager.DestroyBuildings();
+            maze.CreateMaze();
+        }
+
         void SpawnBuildings()
         {
-            buildingManager.SpawnBuildings(4);
+            buildingManager.SpawnBuildings();
             Grid.RecreateGrid();
 
             foreach (Building building in buildingManager.Buildings) {
@@ -72,7 +98,7 @@ namespace Simulation.Core
 
         void SpawnWaypoints()
         {
-            patrolWaypoints = waypointFactory.SpawnWaypoints();
+            patrolWaypoints = waypointFactory.SpawnWaypoints(20);
 
             for (int i = 0; i < npcs.Count; ++i) {
                 npcs[i].GetComponent<Patroler>().SetPatrolWaypoints(patrolWaypoints);
@@ -110,9 +136,9 @@ namespace Simulation.Core
 
         void SpawnPlayer()
         {
-            player = Instantiate(prefabs.Player, playerSpawn);
+            Player = Instantiate(prefabs.Player, playerSpawn);
 
-            cam.Player = player;
+            cam.Player = Player;
         }
 
         void Awake()
@@ -129,10 +155,10 @@ namespace Simulation.Core
                 return;
             }
 
-            pathFinder = GetComponent<PathFinder>();
-            var pathRequestManager = new PathRequestManager(pathFinder);
-
             Grid = GetComponent<AI.AStar.Grid>();
+
+            pathFinder = GetComponent<PathFinder>();
+            var pathRequestManager = new PathRequestManager(pathFinder, Grid);
 
             npcFactory = new NPCFactory(prefabs.NPC, pathRequestManager);
             buildingManager = new BuildingManager(new BuildingFactory(prefabs.Buildings, prefabs.PressurePlate, Grid));
@@ -145,6 +171,8 @@ namespace Simulation.Core
             SpawnNPCs();
             SpawnWaypoints();
             SpawnPlayer();
+
+            maze = new Maze(this, new Vector2Int(15, 15));
         }
 
         void FixedUpdate()

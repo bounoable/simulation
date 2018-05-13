@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using Simulation.Core;
+using Simulation.Support;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,13 +10,15 @@ namespace Simulation.AI
     [RequireComponent(typeof(ICharacter))]
     class Patroler: MonoBehaviour, IPatroling
     {
+        public bool IsPatroling => patroling;
+
         Vector3 Position
         {
             get { return transform.position; }
             set { transform.position = value; }
         }
 
-        Transform[] patrolWaypoints;
+        Transform[] patrolWaypoints = new Transform[0];
         Transform currentPatrolPoint;
 
         Queue<Transform> patrolQueue = new Queue<Transform>();
@@ -29,6 +32,11 @@ namespace Simulation.AI
             if (patroling || patrolQueue.Count == 0)
                 return;
             
+            // var approacher = GetComponent<IApproacher>();
+
+            // if (approacher != null && approacher.IsApproaching)
+            //     return;
+            
             patroling = true;
 
             currentPatrolPoint = patrolQueue.Dequeue();
@@ -39,13 +47,19 @@ namespace Simulation.AI
 
         public void StopPatrol()
         {
-            // patroling = false;
             character.StopMoving();
+            // patroling = false;
         }
 
         public void SetPatrolWaypoints(PatrolWaypoint[] waypoints)
         {
-            patrolWaypoints = waypoints.Select(waypoint => waypoint.transform).ToArray();
+            var transforms = new List<Transform>();
+            
+            transforms.AddRange(waypoints.Select(waypoint => waypoint.transform).ToArray());
+            transforms.Shuffle();
+
+            patrolWaypoints = transforms.ToArray();
+
             InitWaypoints();
         }
 

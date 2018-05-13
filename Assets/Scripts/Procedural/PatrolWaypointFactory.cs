@@ -22,23 +22,23 @@ namespace Simulation.Procedural
 
         public PatrolWaypoint[] SpawnWaypoints(int count = 3)
         {
-            var positions = new Vector3[] {
-                new Vector3(5, 0, 5),
-                new Vector3(grid.WorldSize.x - 5, 0, 5),
-                new Vector3(grid.WorldSize.x - 5, 0, grid.WorldSize.y - 5),
-                new Vector3(5, 0, grid.WorldSize.y - 5)
-            };
+            Vector3 center = grid.WorldBottomLeft + new Vector3(grid.WorldSize.x / 2, 0, grid.WorldSize.y / 2);
 
-            count = Mathf.Clamp(count, 1, positions.Length);
+            var waypoints = new PatrolWaypoint[count];
 
-            var usedPositions = new Vector3[3];
-            var waypoints = new PatrolWaypoint[3];
+            float degrees = 0;
 
-            for (int i = 0; i < 3; ++i) {
-                Vector3 position = RandomPosition(positions, usedPositions);
-                usedPositions[i] = position;
-                waypoints[i] = SpawnWaypoint(position);
+            for (int i = 1; i < count; ++i) {
+                var rotation = Quaternion.Euler(0, degrees, 0);
+                Vector3 direction = rotation * Vector3.forward;
+                Vector3 position = center + direction * grid.WorldSize.x * 0.4f;
+
+                degrees += 360f / (count - 1);
+
+                waypoints[i] = MonoBehaviour.Instantiate(prefab, position, prefab.transform.rotation);
             }
+
+            waypoints[0] = MonoBehaviour.Instantiate(prefab, center, prefab.transform.rotation);
 
             return waypoints;
         }

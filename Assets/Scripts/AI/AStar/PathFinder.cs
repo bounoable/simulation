@@ -8,20 +8,20 @@ using System.Collections.Generic;
 
 namespace Simulation.AI.AStar
 {
-    [RequireComponent(typeof(Grid))]
     class PathFinder: MonoBehaviour, IPathFinder
     {
         const float SQRT_OF_2 = 1.4142f;
 
-        Grid grid;
-
-        public void FindPath(Vector3 start, Vector3 target, PathRequestManager requestManager)
+        public void FindPath(Grid grid, Vector3 start, Vector3 target, PathRequestManager requestManager)
         {
-            StartCoroutine(CalculatePath(start, target, requestManager));
+            StartCoroutine(CalculatePath(grid, start, target, requestManager));
         }
 
-        public IEnumerator CalculatePath(Vector3 startPos, Vector3 targetPos, PathRequestManager requestManager)
+        public IEnumerator CalculatePath(Grid grid, Vector3 startPos, Vector3 targetPos, PathRequestManager requestManager)
         {
+            if (!grid)
+                yield break;
+            
             Vector3[] waypoints = new Vector3[0];
             bool pathFound = false;
 
@@ -42,7 +42,7 @@ namespace Simulation.AI.AStar
                     break;
                 }
 
-                AnalyzeNeighbourNodes(currentNode, targetNode, openSet, closedSet);
+                AnalyzeNeighbourNodes(grid, currentNode, targetNode, openSet, closedSet);
             }
 
             yield return null;
@@ -54,7 +54,7 @@ namespace Simulation.AI.AStar
                 requestManager.OnProcessingFinished(waypoints, pathFound);
         }
 
-        void AnalyzeNeighbourNodes(Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)
+        void AnalyzeNeighbourNodes(Grid grid, Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)
         {
             foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
                 if (!neighbour.Walkable || closedSet.Contains(neighbour))
@@ -119,11 +119,6 @@ namespace Simulation.AI.AStar
             }
 
             return waypoints.ToArray();
-        }
-
-        void Awake()
-        {
-            grid = GetComponent<Grid>();
         }
     }
 }

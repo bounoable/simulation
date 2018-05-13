@@ -90,8 +90,12 @@
      <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Player\ThirdPersonCamera.cs" />
      <Compile Include="Assets\Scripts\Procedural\BuildingFactory.cs" />
+     <Compile Include="Assets\Scripts\Procedural\Maze.cs" />
+     <Compile Include="Assets\Scripts\Procedural\MazeNode.cs" />
+     <Compile Include="Assets\Scripts\Procedural\MazeWall.cs" />
      <Compile Include="Assets\Scripts\Procedural\NPCFactory.cs" />
      <Compile Include="Assets\Scripts\Procedural\PatrolWaypointFactory.cs" />
+     <Compile Include="Assets\Scripts\Support\Extensions.cs" />
      <Compile Include="Assets\Scripts\Support\Heap.cs" />
      <Compile Include="Assets\Scripts\Support\ICollisionObservable.cs" />
      <Compile Include="Assets\Scripts\Support\ICollisionObserver.cs" />

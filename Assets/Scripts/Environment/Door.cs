@@ -22,7 +22,6 @@ namespace Simulation.Environment
 		public void Open() => Open(() => {});
 		public void Open(System.Action callback)
 		{
-			Debug.Log(openedPosition);
 			if (!IsOpen)
 				StartCoroutine(MoveTo(openedPosition, () => {
 					IsOpen = true;

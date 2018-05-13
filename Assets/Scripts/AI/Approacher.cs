@@ -9,6 +9,8 @@ namespace Simulation.AI
     [RequireComponent(typeof(ICharacter))]
     class Approacher: MonoBehaviour, IApproacher
     {
+        public bool IsApproaching => isApproaching;
+        
         [SerializeField]
         float LookRadius;
 
@@ -67,6 +69,11 @@ namespace Simulation.AI
         {
             if (isApproaching)
                 return;
+            
+            // var patroler = GetComponent<IPatroling>();
+
+            // if (patroler != null && patroler.IsPatroling)
+            //     return;
             
             isApproaching = true;
 

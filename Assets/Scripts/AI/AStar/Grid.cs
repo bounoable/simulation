@@ -8,9 +8,11 @@ namespace Simulation.AI.AStar
     {
         static System.Random rand = new System.Random();
 
+        public Vector3 Position => transform.position;
         public int Size => gridSize.x * gridSize.y;
         public Vector2 WorldSize => worldSize;
         public Vector3 WorldBottomLeft => transform.position - Vector3.right * worldSize.x / 2 - Vector3.forward * worldSize.y / 2;
+        public Vector2Int GridSize => gridSize;
 
         Vector2Int gridSize;
 
@@ -23,7 +25,7 @@ namespace Simulation.AI.AStar
         float NodeDiameter => NodeRadius * 2;
 
         Node[][] nodes;
-        LayerMask walkableMask = (1 << 9) | (1 << 11);
+        LayerMask walkableMask = (1 << 9) | (1 << 10) | (1 << 11);
 
         [SerializeField]
         bool drawGridGizmos = false;

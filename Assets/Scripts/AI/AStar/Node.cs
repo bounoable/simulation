@@ -3,7 +3,7 @@ using Simulation.Support;
 
 namespace Simulation.AI.AStar
 {
-    class Node: IHeapItem<Node>
+    class Node: INode
     {
         public Vector3 Position { get; private set; }
         public Vector2Int GridPosition { get; private set; }
@@ -11,7 +11,7 @@ namespace Simulation.AI.AStar
         public float GCost { get; set; }
         public float HCost { get; set; }
         public float FCost => GCost + HCost;
-        public Node Parent { get; set; }
+        public INode Parent { get; set; }
         public int HeapIndex { get; set; }
 
         public Node(Vector3 position, Vector2Int gridPos, bool walkable = true)
@@ -21,7 +21,7 @@ namespace Simulation.AI.AStar
             Walkable = walkable;
         }
 
-        public int CompareTo(Node other)
+        public int CompareTo(INode other)
         {
             int fCostCompare = -FCost.CompareTo(other.FCost);
 

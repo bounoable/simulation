@@ -83,6 +83,9 @@ namespace Simulation.AI
         IEnumerator StartApproach(INPCTarget target)
         {
             while (true) {
+                if (!transform || target == null)
+                    yield break;
+                
                 if (Vector3.Distance(transform.position, target.Position) < 0.5f)
                     yield break;
 

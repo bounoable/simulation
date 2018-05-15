@@ -136,7 +136,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1365481031741150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 20.315035, y: 0.0050001144, z: -14.938001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4082655219763310}
@@ -393,12 +393,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72089ebe748c34aaeab244a76bc97e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 14
+  moveSpeed: 15
   head: {fileID: 4680000407521800}
   rotationSpeed: 3
   gravity: 70
   maxVelocityChange: 10
-  jumpHeight: 2
+  jumpHeight: 4
+  health: 100
+  maxHealth: 100
+  damageCooldownTimeout: 3
 --- !u!135 &135577428823776502
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -432,10 +435,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.5838275
   m_Height: 2.2084718
   m_Direction: 1
-  m_Center: {x: 0, y: 0.88904643, z: 0}
+  m_Center: {x: -0.000012874603, y: 0.88904643, z: 0.049088955}
 --- !u!136 &136675198860512930
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -8,6 +8,6 @@ namespace Simulation.AI
 {
     interface IPathFinder
     {
-        void FindPath(AStar.Grid grid, Vector3 start, Vector3 target, PathRequestManager requestManager);
+        void FindPath(IGrid grid, Vector3 start, Vector3 target, PathRequestManager requestManager);
     }
 }

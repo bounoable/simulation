@@ -12,29 +12,29 @@ namespace Simulation.AI.AStar
     {
         const float SQRT_OF_2 = 1.4142f;
 
-        public void FindPath(Grid grid, Vector3 start, Vector3 target, PathRequestManager requestManager)
+        public void FindPath(IGrid grid, Vector3 start, Vector3 target, PathRequestManager requestManager)
         {
             StartCoroutine(CalculatePath(grid, start, target, requestManager));
         }
 
-        public IEnumerator CalculatePath(Grid grid, Vector3 startPos, Vector3 targetPos, PathRequestManager requestManager)
+        public IEnumerator CalculatePath(IGrid grid, Vector3 startPos, Vector3 targetPos, PathRequestManager requestManager)
         {
-            if (!grid)
+            if (grid == null)
                 yield break;
             
             Vector3[] waypoints = new Vector3[0];
             bool pathFound = false;
 
-            Node startNode = grid.NodeFromWorldPosition(startPos);
-            Node targetNode = grid.NodeFromWorldPosition(targetPos);
+            INode startNode = grid.NodeFromWorldPosition(startPos);
+            INode targetNode = grid.NodeFromWorldPosition(targetPos);
 
-            var openSet = new Heap<Node>(grid.Size);
-            var closedSet = new HashSet<Node>();
+            var openSet = new Heap<INode>(grid.NodeCount);
+            var closedSet = new HashSet<INode>();
 
             openSet.Add(startNode);
 
             while (openSet.Count > 0) {
-                Node currentNode = openSet.Unshift();
+                INode currentNode = openSet.Unshift();
                 closedSet.Add(currentNode);
 
                 if (currentNode == targetNode) {
@@ -54,9 +54,9 @@ namespace Simulation.AI.AStar
                 requestManager.OnProcessingFinished(waypoints, pathFound);
         }
 
-        void AnalyzeNeighbourNodes(Grid grid, Node currentNode, Node targetNode, Heap<Node> openSet, HashSet<Node> closedSet)
+        void AnalyzeNeighbourNodes(IGrid grid, INode currentNode, INode targetNode, Heap<INode> openSet, HashSet<INode> closedSet)
         {
-            foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
+            foreach (INode neighbour in grid.GetNeighbours(currentNode)) {
                 if (!neighbour.Walkable || closedSet.Contains(neighbour))
                     continue;
                 
@@ -75,7 +75,7 @@ namespace Simulation.AI.AStar
             }
         }
 
-        float GetNodeDistance(Node nodeA, Node nodeB)
+        float GetNodeDistance(INode nodeA, INode nodeB)
         {
             int distanceX = Mathf.Abs(nodeA.GridPosition.x - nodeB.GridPosition.x);
             int distanceY = Mathf.Abs(nodeA.GridPosition.y - nodeB.GridPosition.y);
@@ -85,9 +85,9 @@ namespace Simulation.AI.AStar
                 : SQRT_OF_2 * distanceX + distanceY - distanceX;
         }
 
-        Vector3[] RetracePath(Node startNode, Node targetNode)
+        Vector3[] RetracePath(INode startNode, INode targetNode)
         {
-            var path = new List<Node>();
+            var path = new List<INode>();
             var currentNode = targetNode;
 
             while (currentNode != startNode) {
@@ -102,7 +102,7 @@ namespace Simulation.AI.AStar
             return waypoints;
         }
 
-        Vector3[] SimplifyPath(List<Node> path)
+        Vector3[] SimplifyPath(List<INode> path)
         {
             var waypoints = new List<Vector3>();
             var oldDirection = Vector2.zero;

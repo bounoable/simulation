@@ -3,6 +3,7 @@ using UnityEngine;
 using Simulation.Core;
 using Simulation.Support;
 using System.Collections;
+using Simulation.AI.AStar;
 using System.Collections.Generic;
 
 namespace Simulation.AI
@@ -27,7 +28,7 @@ namespace Simulation.AI
 
         ICharacter character;
 
-        public void Patrol()
+        public void Patrol(IGrid grid)
         {
             if (patroling || patrolQueue.Count == 0)
                 return;
@@ -42,7 +43,12 @@ namespace Simulation.AI
             currentPatrolPoint = patrolQueue.Dequeue();
             patrolQueue.Enqueue(currentPatrolPoint);
 
-            character.MoveTo(currentPatrolPoint.position, () => patroling = false, () => patroling = false);
+            if (currentPatrolPoint == null)  {
+                patroling = false;
+                return;
+            }
+
+            character.MoveTo(currentPatrolPoint.position, grid, () => patroling = false, () => patroling = false);
         }
 
         public void StopPatrol()

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Simulation.AI.AStar;
 
 namespace Simulation.AI
 {
@@ -8,9 +9,9 @@ namespace Simulation.AI
         Vector3 Position { get; }
         float MoveSpeed { get; }
         
-        void MoveTo(Vector3 target);
-        void MoveTo(Vector3 target, System.Action onTargetReached);
-        void MoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail);
+        void MoveTo(Vector3 target, IGrid grid);
+        void MoveTo(Vector3 target, IGrid grid, System.Action onTargetReached);
+        void MoveTo(Vector3 target, IGrid grid, System.Action onTargetReached, System.Action onPathFail);
         void StopMoving();
     }
 }

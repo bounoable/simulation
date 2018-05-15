@@ -1,21 +1,27 @@
 using System.Linq;
 using UnityEngine;
 using Simulation.Core;
+using Simulation.AI.AStar;
 using System.Collections.Generic;
 
 namespace Simulation.Procedural
 {
-    class Maze
+    class Maze: IGrid
     {
         static System.Random rand = new System.Random();
+
+        public int NodeCount => GridSize.x * GridSize.y;
 
         public Vector3 Position { get; private set; }
         public Vector3 Size { get; private set; }
         public Vector2Int GridSize { get; private set; }
 
-        float NodeWidth => Size.x / GridSize.x;
+        public MazeNode[][] Nodes => nodes;
+
+        public float NodeWidth => Size.x / GridSize.x;
         float NodeHeight => Size.y;
         float NodeDepth => Size.z / GridSize.y;
+        LayerMask walkableMask = (1 << 9) | (1 << 10) | (1 << 11);
 
         GameManager game;
         MazeNode[][] nodes;
@@ -38,7 +44,22 @@ namespace Simulation.Procedural
                     nodes[x][y].CreateWalls();
         }
 
-        public MazeNode NodeFromWorldPosition(Vector3 position)
+        public void RecreateGrid()
+        {
+            Vector3 worldBottomLeft = Position - new Vector3(Size.x / 2, 0, Size.z / 2);
+
+            for (int x = 0; x < GridSize.x; ++x) {
+                for (int y = 0; y < GridSize.y; ++y) {
+                    INode node = nodes[x][y];
+                    var gridPos = new Vector2Int(x, y);
+
+                    node.Walkable = !UnityEngine.Physics.CheckSphere(node.Position, NodeWidth * 0.5f, ~walkableMask);
+                }
+            }
+        }
+
+        public INode NodeFromWorldPosition(Vector3 position) => MazeNodeFromWorldPosition(position);
+        public MazeNode MazeNodeFromWorldPosition(Vector3 position)
         {
             position = position - Position;
             
@@ -53,6 +74,45 @@ namespace Simulation.Procedural
             );
 
             return nodes[x][y];
+        }
+
+        public MazeNode RandomNode()
+        {
+            MazeNode[] row = nodes[rand.Next(0, nodes.Length)];
+
+            return row[rand.Next(0, row.Length)];
+        }
+
+        public List<INode> GetNeighbours(INode node)
+        {
+            var neighbours = new List<INode>();
+
+            for (int x = -1; x <= 1; ++x) {
+                for (int y = -1; y <= 1; ++y) {
+                    if (x == 0 && y == 0)
+                        continue;
+                    
+                    Vector2Int nodePos = node.GridPosition;
+                    var checkPoint = new Vector2Int(nodePos.x + x, nodePos.y + y);
+
+                    if (checkPoint.x >= 0 && checkPoint.x < GridSize.x && checkPoint.y >= 0 && checkPoint.y < GridSize.y) {
+                        neighbours.Add(nodes[checkPoint.x][checkPoint.y]);
+                    }
+                }
+            }
+
+            return neighbours;
+        }
+
+        public MazeNode[] GetRowOfNode(MazeNode node) => nodes[node.GridPos.x];
+
+        public void Destroy()
+        {
+            for (int x = 0; x < nodes.Length; ++x) {
+                for (int y = 0; y < nodes[x].Length; ++y) {
+                    nodes[x][y].DestroyWalls();
+                }
+            }
         }
 
         GameObject CreateWall(MazeNode node)
@@ -90,6 +150,8 @@ namespace Simulation.Procedural
             var node = new MazeNode(game.Prefabs.MazeWall, gridPos, worldPos, new Vector3(NodeWidth, NodeHeight, NodeDepth), MazeNode.WALL_AROUND);
 
             node.Options &= ~MazeNode.WALL_LEFT;
+
+            node.Walkable = !UnityEngine.Physics.CheckSphere(worldPos, NodeWidth * 0.5f, ~walkableMask);
 
             return node;
         }

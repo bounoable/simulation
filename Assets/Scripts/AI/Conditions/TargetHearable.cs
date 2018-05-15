@@ -1,8 +1,10 @@
+using Simulation.Core;
+
 namespace Simulation.AI.Conditions
 {
     class TargetHearable: StateCondition
     {
-        override public bool Check(StateController controller)
+        override public bool Check(StateController controller, GameManager game)
         {
             var approacher = controller.GetComponent<IApproacher>();
 

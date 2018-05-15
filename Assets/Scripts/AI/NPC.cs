@@ -11,5 +11,9 @@ namespace Simulation.AI
     ]
     class NPC: Character
     {
+        public int Damage => damage;
+        
+        [SerializeField]
+        int damage;
     }
 }

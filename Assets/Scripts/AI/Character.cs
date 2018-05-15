@@ -1,12 +1,18 @@
 using UnityEngine;
 using Simulation.Core;
 using System.Collections;
+using Simulation.AI.AStar;
 
 namespace Simulation.AI
 {
     abstract class Character: MonoBehaviour, ICharacter
     {
-        public Vector3 Position => transform.position;
+        public Vector3 Position
+        {
+            get { return transform.position; }
+            set { transform.position = value; }
+        }
+        
         public PathRequestManager PathRequestManager { get; set; }
         public float MoveSpeed => moveSpeed;
 
@@ -18,24 +24,22 @@ namespace Simulation.AI
         System.Action onTargetReached;
         System.Action onPathFail;
 
-        public void MoveTo(Vector3 target) => MoveTo(target, () => {}, () => {});
-        public void MoveTo(Vector3 target, System.Action onTargetReached) => MoveTo(target, onTargetReached, () => {});
-        public void MoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail)
+        public void MoveTo(Vector3 target, IGrid grid) => MoveTo(target, grid, () => {}, () => {});
+        public void MoveTo(Vector3 target, IGrid grid, System.Action onTargetReached) => MoveTo(target, grid, onTargetReached, () => {});
+        public void MoveTo(Vector3 target, IGrid grid, System.Action onTargetReached, System.Action onPathFail)
         {
             StopMoving();
-            StartCoroutine(RealMoveTo(target, onTargetReached, onPathFail));
+            StartCoroutine(RealMoveTo(grid, target, onTargetReached, onPathFail));
         }
 
-        IEnumerator RealMoveTo(Vector3 target, System.Action onTargetReached, System.Action onPathFail)
+        IEnumerator RealMoveTo(IGrid grid, Vector3 target, System.Action onTargetReached, System.Action onPathFail)
         {
-            // yield return new WaitForSeconds(0.2f);
-
             if (PathRequestManager == null)
                 yield break;
 
             this.onTargetReached = onTargetReached;
             this.onPathFail = onPathFail;
-            PathRequestManager.RequestPath(transform.position, target, OnPathFound);
+            PathRequestManager.RequestPath(grid, transform.position, target, OnPathFound);
         }
 
         void OnPathFound(Vector3[] waypoints, bool success)

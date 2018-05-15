@@ -35,8 +35,12 @@ namespace Simulation.Core
 
         public void DestroyBuildings()
         {
-            foreach (Building building in Buildings)
+            foreach (Building building in Buildings) {
+                if (building.PressurePlate)
+                    MonoBehaviour.Destroy(building.PressurePlate.gameObject);
+
                 MonoBehaviour.Destroy(building.gameObject);
+            }
             
             Buildings.Clear();
         }
@@ -69,8 +73,8 @@ namespace Simulation.Core
             if (doorToggled)
                 game.Grid.RecreateGrid();
             
-            if (pressurePlatesTriggered)
-                game.CreateMaze();
+            if (!pressurePlatesTriggered)
+                game.SetStage(GameStage.Stage.Maze);
         }
     }
 }

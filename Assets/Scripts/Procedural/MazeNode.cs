@@ -1,15 +1,27 @@
 using UnityEngine;
+using Simulation.AI.AStar;
 using System.Collections.Generic;
 
 namespace Simulation.Procedural
 {
-    class MazeNode
+    class MazeNode: INode
     {
+        static System.Random rand = new System.Random();
+
         public const int WALL_TOP = 1 << 0;
         public const int WALL_RIGHT = 1 << 1;
         public const int WALL_BOTTOM = 1 << 2;
         public const int WALL_LEFT = 1 << 3;
         public const int WALL_AROUND = WALL_TOP | WALL_RIGHT | WALL_BOTTOM | WALL_LEFT;
+
+        public Vector3 Position => WorldPos;
+        public bool Walkable { get; set; } = false;
+        public float GCost { get; set; }
+        public float HCost { get; set; }
+        public float FCost { get; }
+        public Vector2Int GridPosition => GridPos;
+        public INode Parent { get; set; }
+        public int HeapIndex { get; set; }
 
         public Vector2Int GridPos { get; private set; }
         public Vector3 WorldPos { get; private set; }
@@ -37,6 +49,17 @@ namespace Simulation.Procedural
         public bool HasMask(int mask) => (Options & mask) == mask;
         public void AddMask(int mask) => Options |= mask;
         public void RemoveMask(int mask) => Options &= ~mask;
+
+        public void RecreateWalls()
+        {
+            for (int i = 0; i < Walls.Count; ++i) {
+                MonoBehaviour.Destroy(Walls[i].gameObject);
+            }
+
+            Walls.Clear();
+
+            CreateWalls();
+        }
 
         public void CreateWalls()
         {
@@ -83,6 +106,50 @@ namespace Simulation.Procedural
 
                 left.Rise();
             }
+        }
+
+        public void DestroyWalls()
+        {
+            for (int i = 0; i < Walls.Count; ++i) {
+                MonoBehaviour.Destroy(Walls[i].gameObject);
+            }
+
+            Walls.Clear();
+        }
+
+        public void OpenRandomSide(bool recreateWalls = false)
+        {
+            if ((Options & WALL_AROUND) != WALL_AROUND)
+                return;
+            
+        
+            switch (rand.Next(0, 4)) {
+                case 0:
+                    RemoveMask(WALL_TOP);
+                    break;
+                case 1:
+                    RemoveMask(WALL_RIGHT);
+                    break;
+                case 2:
+                    RemoveMask(WALL_BOTTOM);
+                    break;
+                case 3:
+                    RemoveMask(WALL_LEFT);
+                    break;
+            }
+
+            if (recreateWalls)
+                RecreateWalls();
+        }
+
+        public int CompareTo(INode other)
+        {
+            int fCostCompare = -FCost.CompareTo(other.FCost);
+
+            if (fCostCompare == 0)
+                return -HCost.CompareTo(other.HCost);
+            
+            return fCostCompare;
         }
     }
 }

@@ -19,3 +19,8 @@ MonoBehaviour:
     onSuccess: {fileID: 11400000, guid: a8e6f508709144e8f840f839b4bbcd49, type: 2}
     onFail: {fileID: 0}
     conditionsType: 0
+  - conditions:
+    - {fileID: 11400000, guid: 952f4b3dcbd0a455aa3ed22e2fb0ff07, type: 2}
+    onSuccess: {fileID: 11400000, guid: 0f167227bc4414348aaa5da9d6c36c3b, type: 2}
+    onFail: {fileID: 0}
+    conditionsType: 0

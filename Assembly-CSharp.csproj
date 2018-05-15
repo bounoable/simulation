@@ -53,12 +53,16 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AI\Action.cs" />
      <Compile Include="Assets\Scripts\AI\Actions\Approach.cs" />
+     <Compile Include="Assets\Scripts\AI\Actions\HuntPlayer.cs" />
      <Compile Include="Assets\Scripts\AI\Actions\Patrol.cs" />
      <Compile Include="Assets\Scripts\AI\Approacher.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\Grid.cs" />
+     <Compile Include="Assets\Scripts\AI\AStar\IGrid.cs" />
+     <Compile Include="Assets\Scripts\AI\AStar\INode.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AI\AStar\PathFinder.cs" />
      <Compile Include="Assets\Scripts\AI\Character.cs" />
+     <Compile Include="Assets\Scripts\AI\Conditions\GameStageCondition.cs" />
      <Compile Include="Assets\Scripts\AI\Conditions\TargetHearable.cs" />
      <Compile Include="Assets\Scripts\AI\Conditions\TargetInSight.cs" />
      <Compile Include="Assets\Scripts\AI\Conditions\TargetOutOfSight.cs" />
@@ -72,12 +76,16 @@
      <Compile Include="Assets\Scripts\AI\PathRequestManager.cs" />
      <Compile Include="Assets\Scripts\AI\Patroler.cs" />
      <Compile Include="Assets\Scripts\AI\PatrolWaypoint.cs" />
+     <Compile Include="Assets\Scripts\AI\StageCondition.cs" />
      <Compile Include="Assets\Scripts\AI\State.cs" />
-     <Compile Include="Assets\Scripts\AI\StateCondition.cs" />
      <Compile Include="Assets\Scripts\AI\StateController.cs" />
      <Compile Include="Assets\Scripts\AI\Transition.cs" />
+     <Compile Include="Assets\Scripts\Core\AIStage.cs" />
      <Compile Include="Assets\Scripts\Core\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\Core\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Core\GameStage.cs" />
+     <Compile Include="Assets\Scripts\Core\IGameLoop.cs" />
+     <Compile Include="Assets\Scripts\Core\MazeStage.cs" />
      <Compile Include="Assets\Scripts\Core\Prefabs.cs" />
      <Compile Include="Assets\Scripts\Environment\AutomaticDoor.cs" />
      <Compile Include="Assets\Scripts\Environment\Building.cs" />
@@ -100,6 +108,7 @@
      <Compile Include="Assets\Scripts\Support\ICollisionObservable.cs" />
      <Compile Include="Assets\Scripts\Support\ICollisionObserver.cs" />
      <Compile Include="Assets\Scripts\Support\IHeapItem.cs" />
+     <Compile Include="Assets\Scripts\UI\BloodyScreen.cs" />
      <None Include="Assets\Sounds\Read Me.txt" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>/Users/Bono/Unity Projects/Simulation/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

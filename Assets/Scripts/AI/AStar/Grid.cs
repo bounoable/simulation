@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace Simulation.AI.AStar
 {
-    class Grid: MonoBehaviour
+    class Grid: MonoBehaviour, IGrid
     {
         static System.Random rand = new System.Random();
 
         public Vector3 Position => transform.position;
         public int Size => gridSize.x * gridSize.y;
+        public int NodeCount => Size;
         public Vector2 WorldSize => worldSize;
         public Vector3 WorldBottomLeft => transform.position - Vector3.right * worldSize.x / 2 - Vector3.forward * worldSize.y / 2;
         public Vector2Int GridSize => gridSize;
@@ -30,7 +31,7 @@ namespace Simulation.AI.AStar
         [SerializeField]
         bool drawGridGizmos = false;
 
-        public Node NodeFromWorldPosition(Vector3 position)
+        public INode NodeFromWorldPosition(Vector3 position)
         {
             position = position - transform.position;
             
@@ -69,9 +70,9 @@ namespace Simulation.AI.AStar
             return nodes[rand.Next(gridSize.x / 2 - halfWidth, innerGridSize.x)][rand.Next(gridSize.y / 2 - halfHeight, innerGridSize.y)];
         }
 
-        public List<Node> GetNeighbours(Node node)
+        public List<INode> GetNeighbours(INode node)
         {
-            var neighbours = new List<Node>();
+            var neighbours = new List<INode>();
 
             for (int x = -1; x <= 1; ++x) {
                 for (int y = -1; y <= 1; ++y) {

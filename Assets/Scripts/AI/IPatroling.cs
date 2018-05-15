@@ -1,4 +1,5 @@
 using UnityEngine;
+using Simulation.AI.AStar;
 
 namespace Simulation.AI
 {
@@ -6,7 +7,7 @@ namespace Simulation.AI
     {
         bool IsPatroling { get; }
         
-        void Patrol();
+        void Patrol(IGrid grid);
         void StopPatrol();
     }
 }

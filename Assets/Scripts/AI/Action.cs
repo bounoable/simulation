@@ -1,12 +1,14 @@
 using UnityEngine;
+using Simulation.Core;
 
 namespace Simulation.AI
 {
     abstract class Action: ScriptableObject
     {
-        abstract public void Run(StateController controller);
+        virtual public void Run(StateController controller, GameManager game)
+        {}
 
-        virtual public void Stop(StateController controller)
+        virtual public void Stop(StateController controller, GameManager game)
         {}
     }
 }

@@ -1,11 +1,12 @@
 using UnityEngine;
+using Simulation.Core;
 
 namespace Simulation.AI.Actions
 {
     [CreateAssetMenu(menuName="AI/Actions/Approach")]
     class Approach: Action
     {
-        override public void Run(StateController controller)
+        override public void Run(StateController controller, GameManager game)
         {
             var approacher = controller.GetComponent<IApproacher>();
 
@@ -20,7 +21,7 @@ namespace Simulation.AI.Actions
             approacher.Approach(target);
         }
 
-        override public void Stop(StateController controller)
+        override public void Stop(StateController controller, GameManager game)
         {
             var approacher = controller.GetComponent<IApproacher>();
 

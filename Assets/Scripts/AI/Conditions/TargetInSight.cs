@@ -1,11 +1,12 @@
 using UnityEngine;
+using Simulation.Core;
 
 namespace Simulation.AI.Conditions
 {
     [CreateAssetMenu(menuName="AI/Conditions/TargetInSight")]
     class TargetInSight: StateCondition
     {
-        override public bool Check(StateController controller)
+        override public bool Check(StateController controller, GameManager game)
         {
             var approacher = controller.GetComponent<IApproacher>();
             

@@ -1,4 +1,5 @@
 using System.Collections;
+using Simulation.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,19 +26,19 @@ namespace Simulation.AI
         [SerializeField]
         ConditionsType conditionsType;
 
-        public State GetNextState(StateController controller)
+        public State GetNextState(StateController controller, GameManager game)
         {
             switch (conditionsType) {
                 case ConditionsType.ALL:
                     for (int i = 0; i < conditions.Length; ++i)
-                        if (!conditions[i].Check(controller))
+                        if (!conditions[i].Check(controller, game))
                             return onFail;
                     
                     return onSuccess;
 
                 case ConditionsType.EITHER:
                     for (int i = 0; i < conditions.Length; ++i)
-                        if (conditions[i].Check(controller))
+                        if (conditions[i].Check(controller, game))
                             return onSuccess;
                     break;
             }

@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using Simulation.AI;
+using Simulation.UI;
 using Simulation.Player;
 using Simulation.Support;
 using Simulation.AI.AStar;
@@ -16,10 +17,11 @@ namespace Simulation.Core
     ]
     class GameManager: MonoBehaviour, ICollisionObserver
     {
-        enum Stage
+        enum Status
         {
-            Start,
-            Maze,
+            Active,
+            Won,
+            Lost,
         }
 
         ThirdPersonCamera cam;
@@ -40,26 +42,46 @@ namespace Simulation.Core
         }
 
         public AI.AStar.Grid Grid { get; private set; }
-
         public Prefabs Prefabs => prefabs;
+        public BuildingManager BuildingManager { get; private set; }
+        public PathRequestManager PathRequestManager { get; private set; }
+        public PressurePlate Goal { get; set; }
 
         PathFinder pathFinder;
 
         NPCFactory npcFactory;
         BuildingFactory buildingFactory;
         PatrolWaypointFactory waypointFactory;
-        BuildingManager buildingManager;
         Maze maze;
-        Stage stage = Stage.Start;
 
         PatrolWaypoint[] patrolWaypoints;
         List<NPC> npcs = new List<NPC>();
+
+        Dictionary<GameStage.Stage, GameStage> stages = new Dictionary<GameStage.Stage, GameStage>();
+        public GameStage CurrentStage { get; private set; }
+
+        Status status = Status.Active;
 
         [SerializeField]
         Prefabs prefabs;
 
         [SerializeField]
         Transform playerSpawn;
+
+        [SerializeField]
+        GameStage[] gameStages = new GameStage[0];
+
+        [SerializeField]
+        GameStage initialStage;
+
+        [SerializeField]
+        BloodyScreen bloodyScreen;
+
+        [SerializeField]
+        GameObject winScreen;
+
+        [SerializeField]
+        GameObject loseScreen;
 
         public Player.Player Player { get; private set; }
 
@@ -70,28 +92,109 @@ namespace Simulation.Core
             }
         }
 
-        public void CreateMaze()
+        public Maze CreateMaze()
         {
-            if (stage == Stage.Maze)
-                return;
-            
-            stage = Stage.Maze;
+            RepositionNPCs();
 
+            BuildingManager.DestroyBuildings();
+            maze.CreateMaze();
+
+            return maze;
+        }
+
+        void RepositionNPCs()
+        {
             for (int i = 0; i < npcs.Count; ++i) {
+                MazeNode node = maze.MazeNodeFromWorldPosition(npcs[i].Position);
+                Vector3 position = node.Position + Vector3.down * node.Size.y * 0.5f;
+                npcs[i].transform.position = position;
+            }
+        }
+
+        public void SetStage(GameStage.Stage name)
+        {
+            GameStage stage;
+
+            if (stages.TryGetValue(name, out stage)) {
+                CurrentStage = stage;
+                CurrentStage.Start();
+            }
+        }
+
+        public void DestroyWaypoints()
+        {
+            for (int i = 0; i < patrolWaypoints.Length; ++i) {
+                Destroy(patrolWaypoints[i].gameObject);
+            }
+
+            patrolWaypoints = new PatrolWaypoint[0];
+        }
+
+        public void Lose()
+        {
+            loseScreen.SetActive(true);
+            Time.timeScale = 0;
+            status = Status.Lost;
+        }
+
+        public void Win()
+        {
+            winScreen.SetActive(true);
+            Time.timeScale = 0;
+            status = Status.Won;
+        }
+
+        public void Restart()
+        {
+            loseScreen.SetActive(false);
+            winScreen.SetActive(false);
+
+            DestroyNPCs();
+            BuildingManager.DestroyBuildings();
+            DestroyWaypoints();
+            Destroy(Player.gameObject);
+            maze.Destroy();
+            maze = null;
+
+            if (Goal)
+                Destroy(Goal.gameObject);
+            
+            Time.timeScale = 1f;
+                
+            StartGame();
+        }
+
+        public void StartGame()
+        {
+            SetStage(GameStage.Stage.AI);
+            SpawnBuildings();
+            SpawnNPCs();
+            SpawnWaypoints();
+            SpawnPlayer();
+            InitMaze();
+        }
+
+        void DestroyNPCs()
+        {
+            for (int i = 0; i < npcs.Count; ++i) {
+                npcs[i].StopMoving();
                 Destroy(npcs[i].gameObject);
             }
 
             npcs.Clear();
-            buildingManager.DestroyBuildings();
-            maze.CreateMaze();
+        }
+
+        void InitMaze()
+        {
+            maze = new Maze(this, new Vector2Int(10, 10));
         }
 
         void SpawnBuildings()
         {
-            buildingManager.SpawnBuildings();
+            BuildingManager.SpawnBuildings();
             Grid.RecreateGrid();
 
-            foreach (Building building in buildingManager.Buildings) {
+            foreach (Building building in BuildingManager.Buildings) {
                 building.PressurePlate.Ball.ObserveCollisions(this);
             }
         }
@@ -120,7 +223,7 @@ namespace Simulation.Core
 
         void SpawnNPCs()
         {
-            Building[] buildings = buildingManager.Buildings.ToArray();
+            Building[] buildings = BuildingManager.Buildings.ToArray();
 
             for (int i = 0; i < buildings.Length; ++i) {
                 SpawnNPCinBuilding(buildings[i]);
@@ -130,6 +233,8 @@ namespace Simulation.Core
         void SpawnNPCinBuilding(Building building)
         {
             NPC npc = npcFactory.Spawn(building.Center);
+
+            npc.GetComponent<StateController>().Game = this;
 
             npcs.Add(npc);
         }
@@ -150,34 +255,57 @@ namespace Simulation.Core
 
             cam = Camera.main.GetComponent<ThirdPersonCamera>();
 
-            if (!cam) {
+            if (!(cam && loseScreen && winScreen)) {
                 Destroy(gameObject);
                 return;
             }
 
             Grid = GetComponent<AI.AStar.Grid>();
-
             pathFinder = GetComponent<PathFinder>();
-            var pathRequestManager = new PathRequestManager(pathFinder, Grid);
-
-            npcFactory = new NPCFactory(prefabs.NPC, pathRequestManager);
-            buildingManager = new BuildingManager(new BuildingFactory(prefabs.Buildings, prefabs.PressurePlate, Grid));
+            
+            PathRequestManager = new PathRequestManager(pathFinder);
+            npcFactory = new NPCFactory(prefabs.NPC, PathRequestManager);
+            BuildingManager = new BuildingManager(new BuildingFactory(prefabs.Buildings, prefabs.PressurePlate, Grid));
             waypointFactory = new PatrolWaypointFactory(prefabs.PatrolWaypoint, Grid);
+
+            for (int i = 0; i < gameStages.Length; ++i) {
+                if (gameStages[i] == null)
+                    continue;
+
+                gameStages[i].Game = this;
+                stages.Add(gameStages[i].StageName, gameStages[i]);
+            }
+
+            if (initialStage != null) {
+                CurrentStage = initialStage;
+            }
         }
 
         void Start()
         {
-            SpawnBuildings();
-            SpawnNPCs();
-            SpawnWaypoints();
-            SpawnPlayer();
+            StartGame();
+        }
 
-            maze = new Maze(this, new Vector2Int(15, 15));
+        void Update()
+        {
+            if (CurrentStage)
+                CurrentStage.Update();
+
+            if (Player && bloodyScreen)
+                bloodyScreen.UpdateScreen(Player);
+
+            if (Player && Player.Health <= 0)
+                Lose();
+
+            if (status != Status.Active && Input.GetKeyDown(KeyCode.Space))
+                Restart();
         }
 
         void FixedUpdate()
         {
-            buildingManager.UpdateBuildings(this);
+            if (CurrentStage) {
+                CurrentStage.FixedUpdate();
+            }
         }
     }
 }
